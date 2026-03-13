@@ -1,0 +1,561 @@
+{
+  "cases": {
+    "case-1773377555211": {
+      "case_id": "case-1773377555211",
+      "status": "completed",
+      "patient_context": {
+        "age": 18,
+        "sex": "M",
+        "chief_complaint": "Chest Pain",
+        "vitals": "",
+        "labs": "",
+        "medications": "",
+        "history": ""
+      },
+      "images": [
+        {
+          "id": "img1",
+          "format": "JPG",
+          "file_token": "upl_56ff7053cdad49d790c1b003f5508fdf",
+          "content_base64": null,
+          "content_type": null
+        }
+      ],
+      "progress": [
+        {
+          "step": "queued",
+          "status": "queued",
+          "message": "Case accepted for analysis",
+          "timestamp": "2026-03-13T04:59:06.893958+00:00",
+          "metadata": {}
+        },
+        {
+          "step": "started",
+          "status": "running",
+          "message": "Workflow started",
+          "timestamp": "2026-03-13T04:59:06.898219+00:00",
+          "metadata": {}
+        },
+        {
+          "step": "vision",
+          "status": "running",
+          "message": "Vision Agent analyzing X-ray",
+          "timestamp": "2026-03-13T04:59:06.899621+00:00",
+          "metadata": {
+            "message": "Vision Agent analyzing X-ray"
+          }
+        },
+        {
+          "step": "retrieval",
+          "status": "running",
+          "message": "Retrieval Agent searching PubMed",
+          "timestamp": "2026-03-13T04:59:13.747783+00:00",
+          "metadata": {
+            "message": "Retrieval Agent searching PubMed"
+          }
+        },
+        {
+          "step": "retrieval",
+          "status": "running",
+          "message": "Retrieval Agent searching PubMed",
+          "timestamp": "2026-03-13T04:59:14.098187+00:00",
+          "metadata": {
+            "message": "Retrieval Agent searching PubMed"
+          }
+        },
+        {
+          "step": "diagnosis",
+          "status": "running",
+          "message": "Diagnosis Agent generating differential",
+          "timestamp": "2026-03-13T04:59:17.893976+00:00",
+          "metadata": {
+            "message": "Diagnosis Agent generating differential"
+          }
+        },
+        {
+          "step": "diagnosis",
+          "status": "running",
+          "message": "Diagnosis Agent generating differential",
+          "timestamp": "2026-03-13T04:59:18.148050+00:00",
+          "metadata": {
+            "message": "Diagnosis Agent generating differential"
+          }
+        },
+        {
+          "step": "citation_verifier",
+          "status": "running",
+          "message": "Verifying evidence coverage",
+          "timestamp": "2026-03-13T04:59:19.306469+00:00",
+          "metadata": {
+            "message": "Verifying evidence coverage"
+          }
+        },
+        {
+          "step": "safety",
+          "status": "running",
+          "message": "Applying privacy and safety checks",
+          "timestamp": "2026-03-13T04:59:19.310623+00:00",
+          "metadata": {
+            "message": "Applying privacy and safety checks"
+          }
+        },
+        {
+          "step": "complete",
+          "status": "completed",
+          "message": "Case analysis complete",
+          "timestamp": "2026-03-13T04:59:19.315147+00:00",
+          "metadata": {
+            "message": "Case analysis complete"
+          }
+        },
+        {
+          "step": "citation_verifier",
+          "status": "running",
+          "message": "Verifying evidence coverage",
+          "timestamp": "2026-03-13T04:59:19.512722+00:00",
+          "metadata": {
+            "message": "Verifying evidence coverage"
+          }
+        },
+        {
+          "step": "safety",
+          "status": "running",
+          "message": "Applying privacy and safety checks",
+          "timestamp": "2026-03-13T04:59:19.518162+00:00",
+          "metadata": {
+            "message": "Applying privacy and safety checks"
+          }
+        },
+        {
+          "step": "complete",
+          "status": "completed",
+          "message": "Case analysis complete",
+          "timestamp": "2026-03-13T04:59:19.522570+00:00",
+          "metadata": {
+            "message": "Case analysis complete"
+          }
+        }
+      ],
+      "result": {
+        "imaging_findings": {
+          "pneumothorax": {
+            "prob": 0.22,
+            "laterality": "none",
+            "size": "none"
+          },
+          "pleural_effusion": {
+            "prob": 0.25,
+            "laterality": "right",
+            "size": "trace"
+          },
+          "consolidation": {
+            "prob": 0.38,
+            "location": "right base"
+          }
+        },
+        "differentials": [
+          {
+            "dx": "Pulmonary Edema",
+            "icd10": "J81.1",
+            "rationale": "Bilateral or basilar hazy opacities with dyspnea raise concern for cardiogenic fluid overload.[1]",
+            "support": [
+              {
+                "snippet_id": "s1"
+              }
+            ]
+          },
+          {
+            "dx": "Pleural Effusion",
+            "icd10": "J90",
+            "rationale": "Blunting or layering fluid can explain dyspnea and reduced lung expansion.[2]",
+            "support": [
+              {
+                "snippet_id": "s2"
+              }
+            ]
+          },
+          {
+            "dx": "Basilar Atelectasis",
+            "icd10": "J98.11",
+            "rationale": "Shallow inspiration can mimic dependent opacity and shortness of breath.[3]",
+            "support": [
+              {
+                "snippet_id": "s1"
+              }
+            ]
+          }
+        ],
+        "red_flags": [
+          "Escalate if there is acute heart failure physiology, severe hypoxemia, or new arrhythmia."
+        ],
+        "next_steps": [
+          "Correlate with BNP, ECG, and volume status.",
+          "Consider bedside ultrasound to distinguish edema, effusion, and atelectasis."
+        ],
+        "citations": [
+          {
+            "snippet_id": "s1",
+            "pmid": "40866808",
+            "doi": "10.1186/s12245-025-00971-8",
+            "quote": "Acute aortic dissection (AD) is a life-threatening vascular emergency requiring immediate intervention, with mortality rates increasing by 1-2% per hour post-onset.",
+            "journal": "International journal of emergency medicine",
+            "year": "2025",
+            "title": "Delayed diagnosis of aortic dissection: the overlooked clues on chest X-ray."
+          },
+          {
+            "snippet_id": "s2",
+            "pmid": "41153046",
+            "doi": "10.1148/radiol.2241011113",
+            "quote": "Epipericardial fat necrosis is a rare, self-limiting cause of acute chest pain, which is often misdiagnosed owing to its nonspecific presentation and it being a relatively unknown entity to radiologists.",
+            "journal": "Journal of medical case reports",
+            "year": "2025",
+            "title": "Epipericardial fat necrosis, the overlooked culprit behind chest pain: a case report."
+          },
+          {
+            "snippet_id": "s3",
+            "pmid": "40909081",
+            "doi": "10.7759/cureus.89361",
+            "quote": "This case presents a 25-year-old Indian male with no significant past medical history presenting to the emergency department (ED) due to two weeks of productive cough with pleuritic chest pain.",
+            "journal": "Cureus",
+            "year": "2025",
+            "title": "Unmasking Tuberculosis: A Case of Pericardial Effusion in a Young Adult With Recurrent Pneumonia."
+          },
+          {
+            "snippet_id": "s4",
+            "pmid": "41756196",
+            "doi": "10.1016/s1071-3581(96)90204-4",
+            "quote": "Cardiac troponins (cTns) are essential for evaluating chest pain, but elevated levels can arise from noncardiac causes or laboratory artifacts.",
+            "journal": "Case reports in medicine",
+            "year": "2026",
+            "title": "Disproportionate Elevated Troponin T Without Clinical Ischemia: A Diagnostic Challenge in the Emergency Department."
+          },
+          {
+            "snippet_id": "s5",
+            "pmid": "41511809",
+            "doi": "10.12688/f1000research.11174.1",
+            "quote": "Pulmonary embolism (PE) is a potentially fatal condition that often presents with nonspecific symptoms, making diagnosis challenging in the emergency department (ED).",
+            "journal": "Advanced emergency nursing journal",
+            "year": "",
+            "title": "Negative D -Dimer With Single-Subsegmental Pulmonary Embolism."
+          },
+          {
+            "snippet_id": "s6",
+            "pmid": "41204560",
+            "doi": "10.1097/MD.0000000000045723",
+            "quote": "Post-traumatic renal artery embolism (RAE) represents a rare vascular emergency with diagnostic challenges due to its nonspecific presentation.",
+            "journal": "Medicine",
+            "year": "2025",
+            "title": "Bilateral renal artery embolism following trauma: A case report and systematic review."
+          }
+        ],
+        "overlays": [
+          {
+            "overlay_id": "ovl_001",
+            "type": "bbox",
+            "coords": [
+              358,
+              263,
+              870,
+              702
+            ],
+            "label": "Possible right upper lobe opacity"
+          }
+        ],
+        "diagnostic_summary": "The findings are less specific and require bedside correlation with cardiopulmonary data.",
+        "rag_stats": {
+          "indexed_documents": 8,
+          "new_documents_added": 0,
+          "retrieved_candidates": 8,
+          "query": "Chest Pain chest x-ray differential diagnosis emergency imaging evaluation"
+        },
+        "patient_context": {
+          "age": 18,
+          "sex": "M",
+          "chief_complaint": "[REDACTED_NAME]",
+          "vitals": "",
+          "labs": "",
+          "medications": "",
+          "history": ""
+        },
+        "compliance_banner": "Research / Education Only - Not a Medical Device",
+        "disclaimer": "Prototype decision support output for research and education only. Licensed clinicians must independently review imaging, evidence, and patient context.",
+        "safety_checks": [
+          "No direct identifier fields were retained in the generated report.",
+          "Every listed diagnosis includes at least one evidence reference.",
+          "Urgent clinical deterioration requires immediate clinician escalation."
+        ],
+        "case_id": "case-1773377555211",
+        "status": "completed",
+        "created_at": "2026-03-13T04:59:04.206904+00:00",
+        "images": [
+          {
+            "id": "img1",
+            "format": "JPG",
+            "file_token": "upl_56ff7053cdad49d790c1b003f5508fdf",
+            "content_base64": null,
+            "content_type": null
+          }
+        ],
+        "updated_at": "2026-03-13T04:59:19.526793+00:00"
+      },
+      "created_at": "2026-03-13T04:59:06.893958+00:00",
+      "updated_at": "2026-03-13T04:59:19.526793+00:00"
+    },
+    "case-1773379306569": {
+      "case_id": "case-1773379306569",
+      "status": "completed",
+      "patient_context": {
+        "age": 67,
+        "sex": "M",
+        "chief_complaint": "what is the main isue",
+        "vitals": "",
+        "labs": "",
+        "medications": "",
+        "history": ""
+      },
+      "images": [
+        {
+          "id": "img1",
+          "format": "JPG",
+          "file_token": "upl_f25e6b4bf25b40d5b385c2ad3e561877",
+          "content_base64": null,
+          "content_type": null
+        }
+      ],
+      "progress": [
+        {
+          "step": "queued",
+          "status": "queued",
+          "message": "Case accepted for analysis",
+          "timestamp": "2026-03-13T05:22:33.319885+00:00",
+          "metadata": {}
+        },
+        {
+          "step": "started",
+          "status": "running",
+          "message": "Workflow started",
+          "timestamp": "2026-03-13T05:22:33.328549+00:00",
+          "metadata": {}
+        },
+        {
+          "step": "vision",
+          "status": "running",
+          "message": "Vision Agent analyzing X-ray",
+          "timestamp": "2026-03-13T05:22:33.330660+00:00",
+          "metadata": {
+            "message": "Vision Agent analyzing X-ray"
+          }
+        },
+        {
+          "step": "retrieval",
+          "status": "running",
+          "message": "Retrieval Agent searching PubMed",
+          "timestamp": "2026-03-13T05:22:39.522979+00:00",
+          "metadata": {
+            "message": "Retrieval Agent searching PubMed"
+          }
+        },
+        {
+          "step": "diagnosis",
+          "status": "running",
+          "message": "Diagnosis Agent generating differential",
+          "timestamp": "2026-03-13T05:22:41.262944+00:00",
+          "metadata": {
+            "message": "Diagnosis Agent generating differential"
+          }
+        },
+        {
+          "step": "citation_verifier",
+          "status": "running",
+          "message": "Verifying evidence coverage",
+          "timestamp": "2026-03-13T05:22:42.393702+00:00",
+          "metadata": {
+            "message": "Verifying evidence coverage"
+          }
+        },
+        {
+          "step": "safety",
+          "status": "running",
+          "message": "Applying privacy and safety checks",
+          "timestamp": "2026-03-13T05:22:42.396932+00:00",
+          "metadata": {
+            "message": "Applying privacy and safety checks"
+          }
+        },
+        {
+          "step": "complete",
+          "status": "completed",
+          "message": "Case analysis complete",
+          "timestamp": "2026-03-13T05:22:42.401573+00:00",
+          "metadata": {
+            "message": "Case analysis complete"
+          }
+        }
+      ],
+      "result": {
+        "imaging_findings": {
+          "pneumothorax": {
+            "prob": 0.22,
+            "laterality": "none",
+            "size": "none"
+          },
+          "pleural_effusion": {
+            "prob": 0.25,
+            "laterality": "right",
+            "size": "trace"
+          },
+          "consolidation": {
+            "prob": 0.38,
+            "location": "right base"
+          }
+        },
+        "differentials": [
+          {
+            "dx": "Pulmonary Edema",
+            "icd10": "J81.1",
+            "rationale": "Bilateral or basilar hazy opacities with dyspnea raise concern for cardiogenic fluid overload.[1]",
+            "support": [
+              {
+                "snippet_id": "s1"
+              }
+            ]
+          },
+          {
+            "dx": "Pleural Effusion",
+            "icd10": "J90",
+            "rationale": "Blunting or layering fluid can explain dyspnea and reduced lung expansion.[2]",
+            "support": [
+              {
+                "snippet_id": "s2"
+              }
+            ]
+          },
+          {
+            "dx": "Basilar Atelectasis",
+            "icd10": "J98.11",
+            "rationale": "Shallow inspiration can mimic dependent opacity and shortness of breath.[3]",
+            "support": [
+              {
+                "snippet_id": "s1"
+              }
+            ]
+          }
+        ],
+        "red_flags": [
+          "Escalate if there is acute heart failure physiology, severe hypoxemia, or new arrhythmia."
+        ],
+        "next_steps": [
+          "Correlate with BNP, ECG, and volume status.",
+          "Consider bedside ultrasound to distinguish edema, effusion, and atelectasis."
+        ],
+        "citations": [
+          {
+            "snippet_id": "s1",
+            "pmid": "1010005",
+            "doi": "10.1378/chest.2024.7890",
+            "quote": "Pleural effusion and pneumothorax are both well suited to rapid bedside assessment with ultrasound.",
+            "journal": "Chest",
+            "year": "2024",
+            "title": "Pleural disease and bedside imaging"
+          },
+          {
+            "snippet_id": "s2",
+            "pmid": "1010004",
+            "doi": "10.1001/jama.2024.4567",
+            "quote": "Lobar consolidation on chest radiography, particularly when accompanied by fever and cough, strongly supports community-acquired pneumonia.",
+            "journal": "JAMA",
+            "year": "2024",
+            "title": "Community-acquired pneumonia imaging update"
+          },
+          {
+            "snippet_id": "s3",
+            "pmid": "40909081",
+            "doi": "10.7759/cureus.89361",
+            "quote": "This case presents a 25-year-old Indian male with no significant past medical history presenting to the emergency department (ED) due to two weeks of productive cough with pleuritic chest pain.",
+            "journal": "Cureus",
+            "year": "2025",
+            "title": "Unmasking Tuberculosis: A Case of Pericardial Effusion in a Young Adult With Recurrent Pneumonia."
+          },
+          {
+            "snippet_id": "s4",
+            "pmid": "1010001",
+            "doi": "10.1056/NEJMra2200001",
+            "quote": "Spontaneous pneumothorax commonly presents with acute dyspnea and pleuritic chest pain.",
+            "journal": "New England Journal of Medicine",
+            "year": "2024",
+            "title": "Emergency evaluation of spontaneous pneumothorax"
+          },
+          {
+            "snippet_id": "s5",
+            "pmid": "40866808",
+            "doi": "10.1186/s12245-025-00971-8",
+            "quote": "Acute aortic dissection (AD) is a life-threatening vascular emergency requiring immediate intervention, with mortality rates increasing by 1-2% per hour post-onset.",
+            "journal": "International journal of emergency medicine",
+            "year": "2025",
+            "title": "Delayed diagnosis of aortic dissection: the overlooked clues on chest X-ray."
+          },
+          {
+            "snippet_id": "s6",
+            "pmid": "41522636",
+            "doi": "10.1186/1476-7120-8-18",
+            "quote": "Emergency medicine residents and medical students on emergency medicine rotations.",
+            "journal": "Journal of education & teaching in emergency medicine",
+            "year": "2025",
+            "title": "Clinical Decision-Making Case: Pulmonary Embolism."
+          }
+        ],
+        "overlays": [
+          {
+            "overlay_id": "ovl_001",
+            "type": "bbox",
+            "coords": [
+              63,
+              40,
+              153,
+              108
+            ],
+            "label": "Possible right upper lobe opacity"
+          }
+        ],
+        "diagnostic_summary": "The findings are less specific and require bedside correlation with cardiopulmonary data.",
+        "rag_stats": {
+          "indexed_documents": 14,
+          "new_documents_added": 6,
+          "retrieved_candidates": 12,
+          "query": "what is the main isue chest x-ray thoracic imaging consolidation, pleural effusion"
+        },
+        "patient_context": {
+          "age": 67,
+          "sex": "M",
+          "chief_complaint": "what is the main isue",
+          "vitals": "",
+          "labs": "",
+          "medications": "",
+          "history": ""
+        },
+        "compliance_banner": "Research / Education Only - Not a Medical Device",
+        "disclaimer": "Prototype decision support output for research and education only. Licensed clinicians must independently review imaging, evidence, and patient context.",
+        "safety_checks": [
+          "No direct identifier fields were retained in the generated report.",
+          "Every listed diagnosis includes at least one evidence reference.",
+          "Urgent clinical deterioration requires immediate clinician escalation."
+        ],
+        "case_id": "case-1773379306569",
+        "status": "completed",
+        "created_at": "2026-03-13T05:22:33.319885+00:00",
+        "images": [
+          {
+            "id": "img1",
+            "format": "JPG",
+            "file_token": "upl_f25e6b4bf25b40d5b385c2ad3e561877",
+            "content_base64": null,
+            "content_type": null
+          }
+        ],
+        "updated_at": "2026-03-13T05:22:42.404811+00:00"
+      },
+      "created_at": "2026-03-13T05:22:33.319885+00:00",
+      "updated_at": "2026-03-13T05:22:42.404811+00:00"
+    }
+  }
+}

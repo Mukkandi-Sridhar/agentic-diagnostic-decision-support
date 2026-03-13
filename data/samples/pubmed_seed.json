@@ -1,0 +1,51 @@
+[
+  {
+    "pmid": "1010001",
+    "doi": "10.1056/NEJMra2200001",
+    "year": "2024",
+    "journal": "New England Journal of Medicine",
+    "title": "Emergency evaluation of spontaneous pneumothorax",
+    "content": "Spontaneous pneumothorax commonly presents with acute dyspnea and pleuritic chest pain. Chest radiography remains a first-line imaging test, and urgent intervention is warranted if tension physiology is suspected. Clinical deterioration, hypoxemia, or hemodynamic instability should prompt immediate escalation."
+  },
+  {
+    "pmid": "1010002",
+    "doi": "10.1016/S0140-6736(24)00002-2",
+    "year": "2024",
+    "journal": "The Lancet Respiratory Medicine",
+    "title": "Secondary pneumothorax in chronic lung disease",
+    "content": "Secondary pneumothorax often occurs in patients with underlying chronic lung disease and may produce more severe hypoxemia than primary spontaneous pneumothorax. Management decisions depend on symptom burden, size of pneumothorax, and physiologic reserve."
+  },
+  {
+    "pmid": "1010003",
+    "doi": "10.1164/rccm.2024.03.1234",
+    "year": "2024",
+    "journal": "American Journal of Respiratory and Critical Care Medicine",
+    "title": "Radiographic pitfalls in acute dyspnea",
+    "content": "Pulmonary embolism can coexist with or mimic thoracic emergencies that present with acute dyspnea. A discordance between imaging findings and bedside physiology should trigger reconsideration of the differential diagnosis and further testing."
+  },
+  {
+    "pmid": "1010004",
+    "doi": "10.1001/jama.2024.4567",
+    "year": "2024",
+    "journal": "JAMA",
+    "title": "Community-acquired pneumonia imaging update",
+    "content": "Lobar consolidation on chest radiography, particularly when accompanied by fever and cough, strongly supports community-acquired pneumonia. Small pleural effusions may accompany infection and can indicate a parapneumonic process."
+  },
+  {
+    "pmid": "1010005",
+    "doi": "10.1378/chest.2024.7890",
+    "year": "2024",
+    "journal": "Chest",
+    "title": "Pleural disease and bedside imaging",
+    "content": "Pleural effusion and pneumothorax are both well suited to rapid bedside assessment with ultrasound. When chest radiography is equivocal, ultrasound may improve speed and confidence of diagnosis."
+  },
+  {
+    "pmid": "1010006",
+    "doi": "10.1161/CIRCULATIONAHA.2024.8888",
+    "year": "2024",
+    "journal": "Circulation",
+    "title": "Pulmonary edema on acute chest imaging",
+    "content": "Diffuse or basilar hazy opacities with dyspnea should raise concern for pulmonary edema, particularly in the presence of cardiovascular risk factors or volume overload. Bedside ultrasound and natriuretic peptide testing can help differentiate edema from infection."
+  }
+]
+

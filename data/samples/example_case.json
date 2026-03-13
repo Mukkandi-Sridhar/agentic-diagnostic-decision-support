@@ -1,0 +1,18 @@
+{
+  "case_id": "abc123",
+  "patient_context": {
+    "age": 64,
+    "sex": "M",
+    "chief_complaint": "acute dyspnea",
+    "vitals": "RR 28, SpO2 89% on room air, HR 114",
+    "labs": "WBC 9.8, D-dimer pending",
+    "medications": "albuterol inhaler",
+    "history": "COPD history, sudden pleuritic pain while walking"
+  },
+  "images": [
+    {
+      "id": "img1",
+      "format": "PNG"
+    }
+  ]
+}
