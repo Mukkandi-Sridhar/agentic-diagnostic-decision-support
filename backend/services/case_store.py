@@ -11,16 +11,24 @@ from backend.config import Settings
 
 class CaseStore:
     def __init__(self, settings: Settings) -> None:
+        self.mode = settings.case_store_mode.lower()
         self.path = Path(settings.case_store_path)
-        self.path.parent.mkdir(parents=True, exist_ok=True)
         self.lock = Lock()
-        if not self.path.exists():
-            self.path.write_text(json.dumps({"cases": {}}, indent=2), encoding="utf-8")
+        self.memory_store: dict[str, Any] = {"cases": {}}
+        if self.mode == "file":
+            self.path.parent.mkdir(parents=True, exist_ok=True)
+            if not self.path.exists():
+                self.path.write_text(json.dumps({"cases": {}}, indent=2), encoding="utf-8")
 
     def _load(self) -> dict[str, Any]:
+        if self.mode == "memory":
+            return self.memory_store
         return json.loads(self.path.read_text(encoding="utf-8"))
 
     def _save(self, payload: dict[str, Any]) -> None:
+        if self.mode == "memory":
+            self.memory_store = payload
+            return
         self.path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
     def create_case(self, case_id: str, patient_context: dict[str, Any], images: list[dict[str, Any]]) -> dict[str, Any]:

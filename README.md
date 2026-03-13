@@ -61,7 +61,7 @@ traces/
 ## Local Run
 
 1. Copy `.env.template` to `.env`.
-2. Optional: add `GEMINI_API_KEY` and `OPENAI_API_KEY`.
+2. Add `GEMINI_API_KEY` and optionally `OPENAI_API_KEY`.
 3. Backend:
 
 ```bash
@@ -116,20 +116,11 @@ This repo includes a Render Blueprint at `render.yaml` for the FastAPI backend.
 - Start Command: `uvicorn backend.main:app --host 0.0.0.0 --port $PORT`
 - Health Check Path: `/health`
 
-Important: this app writes uploads, FAISS index files, traces, and case state to disk, so attach a persistent disk. The blueprint mounts a disk at `/var/data` and points these paths there:
-
-- `UPLOAD_DIR=/var/data/uploads`
-- `VECTOR_STORE_PATH=/var/data/indexes/medical_index`
-- `CASE_STORE_PATH=/var/data/cases.json`
-- `TRACE_LOG_PATH=/var/data/traces/agent_logs.jsonl`
-
-Set these Render environment variables during setup:
+For the current demo-friendly setup, Render only needs these environment variables during setup:
 
 ```bash
 GEMINI_API_KEY=your_key
 OPENAI_API_KEY=your_key
-PUBMED_EMAIL=your_email
-PUBMED_TOOL=agentic-diagnostic-support
 USE_REMOTE_MODELS=true
 ```
 
@@ -138,15 +129,14 @@ Render deployment steps:
 1. Push this repository to GitHub.
 2. In Render, create a new Blueprint instance from the repo, or create a Python Web Service manually using the same commands.
 3. Set `PYTHON_VERSION=3.12.7` if you are configuring the service manually. This repo also includes `.python-version` and the Render Blueprint sets the same version.
-4. Confirm the persistent disk is attached.
-5. Add the secret environment variables.
-6. Deploy and verify `https://your-service.onrender.com/health`.
+4. Add the secret environment variables.
+5. Deploy and verify `https://your-service.onrender.com/health`.
 
 ### Deployment Notes
 
 - Vercel should host only the frontend for this project.
-- Render is the better fit for the backend because the backend needs a writable filesystem.
-- Render persistent disks are for paid services; without a disk, uploads and indexes are lost on redeploy.
+- Render is the better fit for the backend because the backend runs the FastAPI API and agent workflow.
+- The app now defaults to temporary session-style storage, so case history is not persisted across restarts unless you explicitly reconfigure storage paths.
 - Render currently defaults newly created Python services to Python `3.14.3`, so this project pins Python `3.12.7` to avoid dependency build issues.
 
 ## Sample Case Loader
