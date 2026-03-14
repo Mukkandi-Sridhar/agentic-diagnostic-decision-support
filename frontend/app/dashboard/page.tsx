@@ -16,8 +16,8 @@ export default function DashboardPage() {
   const [cases, setCases] = useState<CaseSummary[]>([]);
 
   useEffect(() => {
-    getDashboardStats().then(setStats);
-    getCases().then(setCases);
+    getDashboardStats().then(setStats).catch(() => setStats(null));
+    getCases().then(setCases).catch(() => setCases([]));
   }, []);
 
   return (
@@ -62,20 +62,26 @@ export default function DashboardPage() {
             <Button onClick={() => (window.location.href = "/new-case")}>Run New Analysis</Button>
           </div>
           <div className="space-y-3">
-            {cases.map((caseItem) => (
-              <div key={caseItem.case_id} className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border bg-slate-50 p-4">
-                <div>
-                  <p className="font-medium text-slate-950">{caseItem.case_id}</p>
-                  <p className="text-sm text-muted">{new Date(caseItem.updated_at).toLocaleString()}</p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Badge>{caseItem.status}</Badge>
-                  <p className="text-sm text-slate-700">
-                    {caseItem.result?.differentials?.[0]?.dx ?? "Awaiting result"}
-                  </p>
-                </div>
+            {cases.length === 0 ? (
+              <div className="rounded-2xl border border-border bg-slate-50 p-4 text-sm text-slate-600">
+                No real cases yet. Run a new analysis to populate the dashboard.
               </div>
-            ))}
+            ) : (
+              cases.map((caseItem) => (
+                <div key={caseItem.case_id} className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border bg-slate-50 p-4">
+                  <div>
+                    <p className="font-medium text-slate-950">{caseItem.case_id}</p>
+                    <p className="text-sm text-muted">{new Date(caseItem.updated_at).toLocaleString()}</p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Badge>{caseItem.status}</Badge>
+                    <p className="text-sm text-slate-700">
+                      {caseItem.result?.differentials?.[0]?.dx ?? "Awaiting result"}
+                    </p>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </Card>
 

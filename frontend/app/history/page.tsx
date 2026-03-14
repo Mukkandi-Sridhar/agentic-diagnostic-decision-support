@@ -14,7 +14,7 @@ export default function HistoryPage() {
   const [cases, setCases] = useState<CaseSummary[]>([]);
 
   useEffect(() => {
-    getCases().then(setCases);
+    getCases().then(setCases).catch(() => setCases([]));
   }, []);
 
   return (
@@ -30,21 +30,25 @@ export default function HistoryPage() {
           <span>Action</span>
         </div>
         <div className="divide-y divide-border">
-          {cases.map((caseItem) => (
-            <div key={caseItem.case_id} className="grid grid-cols-[1.1fr_1fr_1.2fr_180px] gap-4 px-6 py-5 text-sm text-slate-700">
-              <div className="font-medium text-slate-950">{caseItem.case_id}</div>
-              <div>{new Date(caseItem.updated_at).toLocaleString()}</div>
-              <div className="flex items-center gap-3">
-                <Badge>{caseItem.status}</Badge>
-                <span>{caseItem.result?.differentials?.[0]?.dx ?? "Pending report"}</span>
+          {cases.length === 0 ? (
+            <div className="px-6 py-8 text-sm text-slate-600">No saved case sessions are available.</div>
+          ) : (
+            cases.map((caseItem) => (
+              <div key={caseItem.case_id} className="grid grid-cols-[1.1fr_1fr_1.2fr_180px] gap-4 px-6 py-5 text-sm text-slate-700">
+                <div className="font-medium text-slate-950">{caseItem.case_id}</div>
+                <div>{new Date(caseItem.updated_at).toLocaleString()}</div>
+                <div className="flex items-center gap-3">
+                  <Badge>{caseItem.status}</Badge>
+                  <span>{caseItem.result?.differentials?.[0]?.dx ?? "Pending report"}</span>
+                </div>
+                <div>
+                  <Link className={buttonVariants("outline")} href={`/results/${caseItem.case_id}`}>
+                    Open Report
+                  </Link>
+                </div>
               </div>
-              <div>
-                <Link className={buttonVariants("outline")} href={`/results/${caseItem.case_id}`}>
-                  Open Report
-                </Link>
-              </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </Card>
     </PortalShell>

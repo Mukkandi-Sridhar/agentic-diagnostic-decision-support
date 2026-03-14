@@ -1,6 +1,5 @@
 import axios from "axios";
 
-import { mockCases, mockProgress, mockResult, mockSettings, mockStats } from "@/lib/mock-data";
 import { CaseResult, CaseSummary, DashboardStats, SettingsSnapshot, UploadImageResponse } from "@/types";
 
 const api = axios.create({
@@ -23,49 +22,29 @@ export async function analyzeCase(payload: Record<string, unknown>) {
 }
 
 export async function getDashboardStats(): Promise<DashboardStats> {
-  try {
-    const response = await api.get("/dashboard/stats");
-    return response.data;
-  } catch {
-    return mockStats;
-  }
+  const response = await api.get("/dashboard/stats");
+  return response.data;
 }
 
 export async function getCaseProgress(caseId: string) {
-  try {
-    const response = await api.get(`/cases/${caseId}/progress`);
-    return response.data;
-  } catch {
-    return { case_id: caseId, status: "running", progress: mockProgress };
-  }
+  const response = await api.get(`/cases/${caseId}/progress`);
+  return response.data;
 }
 
-export async function getCaseResult(caseId: string): Promise<CaseResult> {
-  try {
-    const response = await api.get(`/cases/${caseId}/result`);
-    if (response.data?.result === null || !response.data?.differentials) {
-      return { ...mockResult, case_id: caseId, status: response.data?.status ?? "running" };
-    }
-    return response.data.result ?? response.data;
-  } catch {
-    return { ...mockResult, case_id: caseId };
+export async function getCaseResult(caseId: string): Promise<CaseResult | null> {
+  const response = await api.get(`/cases/${caseId}/result`);
+  if (response.data?.result === null || !response.data?.differentials) {
+    return null;
   }
+  return response.data.result ?? response.data;
 }
 
 export async function getCases(): Promise<CaseSummary[]> {
-  try {
-    const response = await api.get("/cases");
-    return response.data.cases;
-  } catch {
-    return mockCases;
-  }
+  const response = await api.get("/cases");
+  return response.data.cases;
 }
 
 export async function getSettingsSnapshot(): Promise<SettingsSnapshot> {
-  try {
-    const response = await api.get("/settings");
-    return response.data;
-  } catch {
-    return mockSettings;
-  }
+  const response = await api.get("/settings");
+  return response.data;
 }

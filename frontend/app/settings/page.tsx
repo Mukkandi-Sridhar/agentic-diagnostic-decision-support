@@ -12,13 +12,13 @@ export default function SettingsPage() {
   const [settings, setSettings] = useState<SettingsSnapshot | null>(null);
 
   useEffect(() => {
-    getSettingsSnapshot().then(setSettings);
+    getSettingsSnapshot().then(setSettings).catch(() => setSettings(null));
   }, []);
 
   return (
     <PortalShell
       title="System Settings"
-      description="Review model routing, RAG storage, and environment-backed configuration for the local prototype."
+      description="Review model routing, RAG storage, and environment-backed configuration."
     >
       <div className="grid gap-6 xl:grid-cols-2">
         <Card className="space-y-5">
@@ -51,4 +51,3 @@ export default function SettingsPage() {
     </PortalShell>
   );
 }
-

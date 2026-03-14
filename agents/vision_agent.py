@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import base64
 import json
+import re
 from pathlib import Path
 from typing import Any
 
@@ -47,11 +48,19 @@ class VisionAgent(CrewCompatibleAgent):
             width, height = 512, 512
 
         if findings.get("pneumothorax", {}).get("prob", 0) < 0.5:
+            consolidation = findings.get("consolidation", {})
+            pleural_effusion = findings.get("pleural_effusion", {})
+            if consolidation.get("prob", 0) >= 0.3:
+                label = f"Possible {consolidation.get('location', 'focal lung')} opacity"
+            elif pleural_effusion.get("prob", 0) >= 0.35:
+                label = f"Possible {pleural_effusion.get('laterality', 'pleural')} effusion"
+            else:
+                label = "Possible focal chest opacity"
             return {
                 "overlay_id": f"ovl_{index + 1:03d}",
                 "type": "bbox",
                 "coords": [int(width * 0.28), int(height * 0.18), int(width * 0.68), int(height * 0.48)],
-                "label": "Possible right upper lobe opacity",
+                "label": label,
             }
 
         lateral = findings["pneumothorax"].get("laterality", "right")
@@ -117,7 +126,19 @@ class VisionAgent(CrewCompatibleAgent):
             response.raise_for_status()
             data = response.json()
             text = data["candidates"][0]["content"]["parts"][0]["text"]
-            return json.loads(text)
+            return self._parse_json_payload(text)
         except Exception as exc:
             self.trace("remote_model_error", {"error": str(exc)})
             return None
+
+    def _parse_json_payload(self, text: str) -> dict[str, Any] | None:
+        try:
+            return json.loads(text)
+        except json.JSONDecodeError:
+            match = re.search(r"\{.*\}", text, re.DOTALL)
+            if not match:
+                return None
+            try:
+                return json.loads(match.group(0))
+            except json.JSONDecodeError:
+                return None

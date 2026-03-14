@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 from typing import Any
 
 import httpx
@@ -44,8 +45,13 @@ class DiagnosisAgent(CrewCompatibleAgent):
         top_snippet = snippets[0]["snippet_id"] if snippets else None
         alt_snippet = snippets[1]["snippet_id"] if len(snippets) > 1 else top_snippet
         pneumothorax = imaging_findings.get("pneumothorax", {})
+        pleural_effusion = imaging_findings.get("pleural_effusion", {})
         consolidation = imaging_findings.get("consolidation", {})
-        complaint = str(patient_context.get("chief_complaint", "")).lower()
+        complaint = " ".join(
+            str(patient_context.get(key, "")) for key in ("chief_complaint", "history", "vitals", "labs")
+        ).lower()
+        focal_location = str(consolidation.get("location", "focal lung"))
+        infectious_features = any(term in complaint for term in ("fever", "cough", "productive", "infection"))
 
         if pneumothorax.get("prob", 0) >= 0.5:
             differentials = [
@@ -78,24 +84,24 @@ class DiagnosisAgent(CrewCompatibleAgent):
                 "Discuss chest tube versus observation based on size, symptoms, and oxygen needs.",
             ]
             summary = "Imaging and literature support a pneumothorax-focused differential with urgent escalation triggers."
-        elif consolidation.get("prob", 0) >= 0.5 or "fever" in complaint:
+        elif consolidation.get("prob", 0) >= 0.35 or infectious_features:
             differentials = [
                 {
-                    "dx": "Community-Acquired Pneumonia",
+                    "dx": "Focal Pneumonia",
                     "icd10": "J18.9",
-                    "rationale": "Focal air-space opacity with infectious symptoms most strongly supports pneumonia.[1]",
+                    "rationale": f"A focal opacity in the {focal_location} is most compatible with pneumonia when paired with respiratory symptoms.[1]",
                     "support": [{"snippet_id": top_snippet}] if top_snippet else [],
                 },
                 {
                     "dx": "Parapneumonic Effusion",
                     "icd10": "J91.8",
-                    "rationale": "Small pleural fluid adjacent to pneumonia can signal evolving complicated infection.[2]",
+                    "rationale": "Small adjacent pleural fluid can accompany focal inflammatory air-space disease.[2]",
                     "support": [{"snippet_id": alt_snippet}] if alt_snippet else [],
                 },
                 {
                     "dx": "Atelectasis",
                     "icd10": "J98.11",
-                    "rationale": "Dependent opacity remains an alternative explanation if fever burden is low or effort is poor.[3]",
+                    "rationale": "Subsegmental collapse remains a competing explanation for a focal opacity, especially if inspiration is shallow.[3]",
                     "support": [{"snippet_id": top_snippet}] if top_snippet else [],
                 },
             ]
@@ -108,36 +114,68 @@ class DiagnosisAgent(CrewCompatibleAgent):
                 "Repeat imaging if the patient does not improve after therapy.",
                 "Assess aspiration risk and antimicrobial coverage needs.",
             ]
-            summary = "The pattern favors infectious air-space disease with effusion and atelectasis as alternatives."
-        else:
+            summary = f"The image pattern is most consistent with a focal air-space opacity in the {focal_location}, with infection favored over collapse."
+        elif pleural_effusion.get("prob", 0) >= 0.35:
+            laterality = pleural_effusion.get("laterality", "pleural")
             differentials = [
-                {
-                    "dx": "Pulmonary Edema",
-                    "icd10": "J81.1",
-                    "rationale": "Bilateral or basilar hazy opacities with dyspnea raise concern for cardiogenic fluid overload.[1]",
-                    "support": [{"snippet_id": top_snippet}] if top_snippet else [],
-                },
                 {
                     "dx": "Pleural Effusion",
                     "icd10": "J90",
-                    "rationale": "Blunting or layering fluid can explain dyspnea and reduced lung expansion.[2]",
-                    "support": [{"snippet_id": alt_snippet}] if alt_snippet else [],
+                    "rationale": f"A {laterality} pleural fluid pattern can explain dyspnea and reduced lung expansion.[1]",
+                    "support": [{"snippet_id": top_snippet}] if top_snippet else [],
                 },
                 {
                     "dx": "Basilar Atelectasis",
                     "icd10": "J98.11",
-                    "rationale": "Shallow inspiration can mimic dependent opacity and shortness of breath.[3]",
+                    "rationale": "Adjacent dependent collapse often accompanies pleural fluid and may contribute to the opacity.[2]",
+                    "support": [{"snippet_id": alt_snippet}] if alt_snippet else [],
+                },
+                {
+                    "dx": "Focal Pneumonia",
+                    "icd10": "J18.9",
+                    "rationale": "Parapneumonic fluid remains possible if there are infectious symptoms or focal air-space changes.[3]",
                     "support": [{"snippet_id": top_snippet}] if top_snippet else [],
                 },
             ]
             red_flags = [
-                "Escalate if there is acute heart failure physiology, severe hypoxemia, or new arrhythmia.",
+                "Escalate if there is severe hypoxemia, hemodynamic instability, or concern for empyema.",
             ]
             next_steps = [
-                "Correlate with BNP, ECG, and volume status.",
-                "Consider bedside ultrasound to distinguish edema, effusion, and atelectasis.",
+                "Correlate with bedside ultrasound to confirm fluid and estimate size.",
+                "Assess for infection, heart failure, or malignancy based on the clinical context.",
+                "Repeat imaging if respiratory symptoms worsen.",
             ]
-            summary = "The findings are less specific and require bedside correlation with cardiopulmonary data."
+            summary = "The image pattern suggests pleural fluid with adjacent compressive change, and bedside correlation is needed."
+        else:
+            differentials = [
+                {
+                    "dx": "Abnormal Chest Imaging Finding",
+                    "icd10": "R91.8",
+                    "rationale": "The uploaded image shows a non-specific thoracic opacity pattern that needs clinical and radiology correlation.[1]",
+                    "support": [{"snippet_id": top_snippet}] if top_snippet else [],
+                },
+                {
+                    "dx": "Basilar Atelectasis",
+                    "icd10": "J98.11",
+                    "rationale": "Low-volume collapse can create a subtle opacity when inspiratory effort is limited.[2]",
+                    "support": [{"snippet_id": alt_snippet}] if alt_snippet else [],
+                },
+                {
+                    "dx": "Focal Pneumonia",
+                    "icd10": "J18.9",
+                    "rationale": "Early infectious air-space disease remains possible if symptoms evolve toward cough, fever, or rising oxygen need.[3]",
+                    "support": [{"snippet_id": top_snippet}] if top_snippet else [],
+                },
+            ]
+            red_flags = [
+                "Escalate if there is severe hypoxemia, hemodynamic instability, or rapidly worsening dyspnea.",
+            ]
+            next_steps = [
+                "Compare with the formal radiology read if available.",
+                "Correlate with oxygen saturation, exam findings, and symptom evolution.",
+                "Repeat chest imaging or ultrasound if the clinical picture changes.",
+            ]
+            summary = "The image pattern is non-specific, so the answer should be treated as a conservative differential rather than a definitive diagnosis."
 
         return {
             "differentials": differentials,
@@ -176,7 +214,7 @@ class DiagnosisAgent(CrewCompatibleAgent):
             )
             response.raise_for_status()
             text = response.json()["candidates"][0]["content"]["parts"][0]["text"]
-            return json.loads(text)
+            return self._parse_json_payload(text)
         except Exception as exc:
             self.trace("remote_model_error", {"provider": "gemini", "error": str(exc)})
             return self._call_openai(patient_context, imaging_findings, snippets)
@@ -220,7 +258,7 @@ class DiagnosisAgent(CrewCompatibleAgent):
             )
             response.raise_for_status()
             text = response.json()["choices"][0]["message"]["content"]
-            return json.loads(text)
+            return self._parse_json_payload(text)
         except Exception as exc:
             self.trace("remote_model_error", {"provider": "openai", "error": str(exc)})
             return None
@@ -241,3 +279,15 @@ class DiagnosisAgent(CrewCompatibleAgent):
                 if item.get("snippet_id") not in snippet_ids:
                     return False
         return True
+
+    def _parse_json_payload(self, text: str) -> dict[str, Any] | None:
+        try:
+            return json.loads(text)
+        except json.JSONDecodeError:
+            match = re.search(r"\{.*\}", text, re.DOTALL)
+            if not match:
+                return None
+            try:
+                return json.loads(match.group(0))
+            except json.JSONDecodeError:
+                return None

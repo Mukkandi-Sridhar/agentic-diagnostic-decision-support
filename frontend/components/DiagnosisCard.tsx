@@ -4,23 +4,20 @@ import { Differential } from "@/types";
 
 export function DiagnosisCard({ diagnosis, rank }: { diagnosis: Differential; rank: number }) {
   return (
-    <Card className="space-y-4">
-      <div className="flex items-center justify-between gap-4">
+    <Card className="space-y-3">
+      <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-sm text-muted">Differential {rank}</p>
-          <h3 className="text-xl font-semibold text-slate-950">{diagnosis.dx}</h3>
+          <p className="text-xs uppercase tracking-[0.16em] text-muted">Option {rank}</p>
+          <h3 className="mt-1 text-lg font-semibold text-slate-950">{diagnosis.dx}</h3>
         </div>
         <Badge>{diagnosis.icd10}</Badge>
       </div>
       <p className="text-sm leading-6 text-slate-700">{diagnosis.rationale}</p>
-      <div className="flex flex-wrap gap-2">
-        {diagnosis.support.map((support) => (
-          <span key={support.snippet_id} className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700">
-            Evidence {support.snippet_id}
-          </span>
-        ))}
-      </div>
+      {diagnosis.support.length > 0 ? (
+        <p className="text-xs uppercase tracking-[0.16em] text-slate-500">
+          Supported by {diagnosis.support.map((support) => support.snippet_id).join(", ")}
+        </p>
+      ) : null}
     </Card>
   );
 }
-

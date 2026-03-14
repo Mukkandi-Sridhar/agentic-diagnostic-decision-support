@@ -40,15 +40,15 @@ export default function LandingPage() {
                 Agentic Diagnostic Decision Support System with Imaging
               </h1>
               <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-300">
-                A complete prototype for grounded chest X-ray decision support, combining multi-agent reasoning, medical literature retrieval, overlay visualization, and citation-backed reporting in a clinical dashboard.
+                Grounded chest X-ray decision support combining image analysis, medical literature retrieval, overlay visualization, and citation-backed reporting in one clinical workflow.
               </p>
               <div className="mt-8 flex flex-wrap gap-4">
-                <Link className={buttonVariants("default", "h-12 px-6 text-base")} href="/dashboard">
+                <Link className={buttonVariants("default", "h-12 px-6 text-base")} href="/new-case">
                   Start Analysis
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
                 <Link className={buttonVariants("outline", "h-12 px-6 text-base")} href="/new-case">
-                  Open New Case
+                  Open Upload Form
                 </Link>
               </div>
             </div>

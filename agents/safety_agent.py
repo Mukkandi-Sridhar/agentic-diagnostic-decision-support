@@ -23,7 +23,7 @@ class SafetyAgent(CrewCompatibleAgent):
         report["patient_context"] = sanitized_context
         report["compliance_banner"] = "Research / Education Only - Not a Medical Device"
         report["disclaimer"] = (
-            "Prototype decision support output for research and education only. "
+            "AI decision support output for research and education only. "
             "Licensed clinicians must independently review imaging, evidence, and patient context."
         )
         report["safety_checks"] = [
@@ -38,4 +38,3 @@ class SafetyAgent(CrewCompatibleAgent):
         scrubbed = re.sub(r"\b([A-Z][a-z]+ [A-Z][a-z]+)\b", "[REDACTED_NAME]", value)
         scrubbed = re.sub(r"\b\d{6,}\b", "[REDACTED_ID]", scrubbed)
         return scrubbed
-
