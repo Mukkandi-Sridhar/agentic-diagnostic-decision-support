@@ -24,7 +24,7 @@ class VisionAgent(CrewCompatibleAgent):
         self.settings = settings
 
     def analyze(self, image_paths: list[Path], patient_context: dict[str, Any]) -> dict[str, Any]:
-        findings = self._heuristic_findings(patient_context)
+        findings = self._normalize_findings(self._heuristic_findings(patient_context))
         overlays: list[dict[str, Any]] = []
         for index, image_path in enumerate(image_paths):
             overlay = self._build_overlay(index, image_path, findings)
@@ -34,7 +34,7 @@ class VisionAgent(CrewCompatibleAgent):
         if self.settings.use_remote_models and self.settings.gemini_api_key and image_paths:
             remote_findings = self._gemini_vision_findings(image_paths[0], patient_context)
             if remote_findings:
-                findings = remote_findings
+                findings = self._normalize_findings(remote_findings)
 
         payload = {"findings": findings, "overlay_count": len(overlays)}
         self.trace("analysis_complete", payload)
@@ -142,3 +142,28 @@ class VisionAgent(CrewCompatibleAgent):
                 return json.loads(match.group(0))
             except json.JSONDecodeError:
                 return None
+
+    def _normalize_findings(self, findings: dict[str, Any] | None) -> dict[str, Any]:
+        payload = findings if isinstance(findings, dict) else {}
+        return {
+            "pneumothorax": self._coerce_finding(payload.get("pneumothorax"), {"laterality": "none", "size": "none"}),
+            "pleural_effusion": self._coerce_finding(payload.get("pleural_effusion"), {"laterality": "none", "size": "none"}),
+            "consolidation": self._coerce_finding(payload.get("consolidation"), {"location": "none"}),
+        }
+
+    def _coerce_finding(self, value: Any, defaults: dict[str, Any]) -> dict[str, Any]:
+        if isinstance(value, dict):
+            normalized = {"prob": self._coerce_probability(value.get("prob", 0.0))}
+            for key, default in defaults.items():
+                normalized[key] = value.get(key, default)
+            return normalized
+
+        normalized = {"prob": self._coerce_probability(value)}
+        normalized.update(defaults)
+        return normalized
+
+    def _coerce_probability(self, value: Any) -> float:
+        try:
+            return max(0.0, min(1.0, float(value)))
+        except (TypeError, ValueError):
+            return 0.0
